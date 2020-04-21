@@ -23,6 +23,9 @@ Supported Platforms:
   #define SerialPort Serial
 #endif
 
+#define PIN_SDA 4
+#define PIN_SCL 5
+
 MPU9250_DMP imu;
 
 void setup()
@@ -33,7 +36,7 @@ void setup()
   // initialize the MPU-9250 to it's default values.
   // Most functions return an error code - INV_SUCCESS (0)
   // indicates the IMU was present and successfully set up
-  if (imu.begin() != INV_SUCCESS)
+  if (imu.begin(PIN_SDA, PIN_SCL) != INV_SUCCESS)
   {
     while (1)
     {

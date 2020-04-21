@@ -25,6 +25,9 @@ Supported Platforms:
   #define SerialPort Serial
 #endif
 
+#define PIN_SDA 4
+#define PIN_SCL 5
+
 MPU9250_DMP imu;
 
 void setup()
@@ -32,7 +35,7 @@ void setup()
   SerialPort.begin(115200);
 
   // Call imu.begin() to verify communication and initialize
-  if (imu.begin() != INV_SUCCESS)
+  if (imu.begin(PIN_SDA, PIN_SCL) != INV_SUCCESS)
   {
     while (1)
     {
