@@ -1,6 +1,6 @@
 /************************************************************
 MPU9250_FIFO_Basic
- Basic example sketch for MPU-9250 DMP Arduino Library 
+ Basic example sketch for MPU-9250 DMP Arduino Library
 Jim Lindblom @ SparkFun Electronics
 original creation date: November 23, 2016
 https://github.com/sparkfun/SparkFun_MPU9250_DMP_Arduino_Library
@@ -19,11 +19,15 @@ Supported Platforms:
 *************************************************************/
 #include <SparkFunMPU9250-DMP.h>
 
-#define SerialPort SerialUSB
+#ifdef SAMD
+  #define SerialPort SerialUSB
+#else
+  #define SerialPort Serial
+#endif
 
 MPU9250_DMP imu;
 
-void setup() 
+void setup()
 {
   SerialPort.begin(115200);
 
@@ -47,13 +51,13 @@ void setup()
   imu.setSampleRate(100); // Set sample rate to 100Hz
 
   // Use configureFifo to set which sensors should be stored
-  // in the buffer.  
-  // Parameter to this function can be: INV_XYZ_GYRO, 
+  // in the buffer.
+  // Parameter to this function can be: INV_XYZ_GYRO,
   // INV_XYZ_ACCEL, INV_X_GYRO, INV_Y_GYRO, or INV_Z_GYRO
   imu.configureFifo(INV_XYZ_GYRO |INV_XYZ_ACCEL);
 }
 
-void loop() 
+void loop()
 {
   // fifoAvailable returns the number of bytes in the FIFO
   // The FIFO is 512 bytes max. We'll read when it reaches
@@ -73,7 +77,7 @@ void loop()
 }
 
 void printIMUData(void)
-{  
+{
   // After calling update() the ax, ay, az, gx, gy, gz, mx,
   // my, mz, time, and/or temerature class variables are all
   // updated. Access them by placing the object. in front:
@@ -87,7 +91,7 @@ void printIMUData(void)
   float gyroX = imu.calcGyro(imu.gx);
   float gyroY = imu.calcGyro(imu.gy);
   float gyroZ = imu.calcGyro(imu.gz);
-  
+
   SerialPort.println("Accel: " + String(accelX) + ", " +
               String(accelY) + ", " + String(accelZ) + " g");
   SerialPort.println("Gyro: " + String(gyroX) + ", " +

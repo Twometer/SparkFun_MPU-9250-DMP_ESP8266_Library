@@ -1,6 +1,6 @@
 /************************************************************
 MPU9250_DMP_Tap
- Tap-detection example for MPU-9250 DMP Arduino Library 
+ Tap-detection example for MPU-9250 DMP Arduino Library
 Jim Lindblom @ SparkFun Electronics
 original creation date: November 23, 2016
 https://github.com/sparkfun/SparkFun_MPU9250_DMP_Arduino_Library
@@ -21,11 +21,15 @@ Supported Platforms:
 *************************************************************/
 #include <SparkFunMPU9250-DMP.h>
 
-#define SerialPort SerialUSB
+#ifdef SAMD
+  #define SerialPort SerialUSB
+#else
+  #define SerialPort Serial
+#endif
 
 MPU9250_DMP imu;
 
-void setup() 
+void setup()
 {
   SerialPort.begin(115200);
 
@@ -60,7 +64,7 @@ void setup()
   imu.dmpSetTap(xThresh, yThresh, zThresh, taps, tapTime, tapMulti);
 }
 
-void loop() 
+void loop()
 {
   // Check for new data in the FIFO
   if ( imu.fifoAvailable() )
@@ -99,4 +103,3 @@ void loop()
     }
   }
 }
-

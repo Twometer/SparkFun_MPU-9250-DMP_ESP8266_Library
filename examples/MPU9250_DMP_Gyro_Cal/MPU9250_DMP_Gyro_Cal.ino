@@ -1,6 +1,6 @@
 /************************************************************
 MPU9250_DMP_Gyro_Cal
- Gyro calibration example for MPU-9250 DMP Arduino Library 
+ Gyro calibration example for MPU-9250 DMP Arduino Library
 Jim Lindblom @ SparkFun Electronics
 original creation date: November 23, 2016
 https://github.com/sparkfun/SparkFun_MPU9250_DMP_Arduino_Library
@@ -19,11 +19,15 @@ Supported Platforms:
 *************************************************************/
 #include <SparkFunMPU9250-DMP.h>
 
-#define SerialPort SerialUSB
+#ifdef SAMD
+  #define SerialPort SerialUSB
+#else
+  #define SerialPort Serial
+#endif
 
 MPU9250_DMP imu;
 
-void setup() 
+void setup()
 {
   SerialPort.begin(115200);
 
@@ -47,7 +51,7 @@ void setup()
               10);                   // Set DMP rate to 10 Hz
 }
 
-void loop() 
+void loop()
 {
   // Check for new data in the FIFO
   if ( imu.fifoAvailable() )
@@ -61,16 +65,15 @@ void loop()
 }
 
 void printIMUData(void)
-{  
+{
   // After calling dmpUpdateFifo() the ax, gx, mx, etc. values
   // are all updated.
   float gyroX = imu.calcGyro(imu.gx);
   float gyroY = imu.calcGyro(imu.gy);
   float gyroZ = imu.calcGyro(imu.gz);
-  
+
   SerialPort.println("Gyro: " + String(gyroX) + ", " +
               String(gyroY) + ", " + String(gyroZ) + " dps");
   SerialPort.println("Time: " + String(imu.time) + " ms");
   SerialPort.println();
 }
-

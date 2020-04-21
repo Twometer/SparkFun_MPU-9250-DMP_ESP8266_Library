@@ -1,6 +1,6 @@
 /************************************************************
 MPU9250_DMP_Orientation
- Orientation example for MPU-9250 DMP Arduino Library 
+ Orientation example for MPU-9250 DMP Arduino Library
 Jim Lindblom @ SparkFun Electronics
 original creation date: November 23, 2016
 https://github.com/sparkfun/SparkFun_MPU9250_DMP_Arduino_Library
@@ -17,7 +17,11 @@ Supported Platforms:
 *************************************************************/
 #include <SparkFunMPU9250-DMP.h>
 
-#define SerialPort SerialUSB
+#ifdef SAMD
+  #define SerialPort SerialUSB
+#else
+  #define SerialPort Serial
+#endif
 
 MPU9250_DMP imu;
 
@@ -32,7 +36,7 @@ const signed char orientationMatrix[9] = {
 };
 unsigned char lastOrient = 0;
 
-void setup() 
+void setup()
 {
   SerialPort.begin(115200);
 
@@ -47,12 +51,12 @@ void setup()
       delay(5000);
     }
   }
-  
+
   imu.dmpBegin(DMP_FEATURE_ANDROID_ORIENT);
   imu.dmpSetOrientation(orientationMatrix);
 }
 
-void loop() 
+void loop()
 {
   if ( imu.fifoAvailable() )
   {
@@ -79,4 +83,3 @@ void loop()
     }
   }
 }
-

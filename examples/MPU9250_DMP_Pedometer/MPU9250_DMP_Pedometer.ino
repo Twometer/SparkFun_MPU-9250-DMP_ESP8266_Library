@@ -1,6 +1,6 @@
 /************************************************************
 MPU9250_DMP_Pedometer
- Pedometer example for MPU-9250 DMP Arduino Library 
+ Pedometer example for MPU-9250 DMP Arduino Library
 Jim Lindblom @ SparkFun Electronics
 original creation date: November 23, 2016
 https://github.com/sparkfun/SparkFun_MPU9250_DMP_Arduino_Library
@@ -20,7 +20,11 @@ Supported Platforms:
 *************************************************************/
 #include <SparkFunMPU9250-DMP.h>
 
-#define SerialPort SerialUSB
+#ifdef SAMD
+  #define SerialPort SerialUSB
+#else
+  #define SerialPort Serial
+#endif
 
 MPU9250_DMP imu;
 
@@ -28,7 +32,7 @@ unsigned long stepCount = 0;
 unsigned long stepTime = 0;
 unsigned long lastStepCount = 0;
 
-void setup() 
+void setup()
 {
   SerialPort.begin(115200);
 
@@ -43,24 +47,23 @@ void setup()
       delay(5000);
     }
   }
-  
+
   imu.dmpBegin(DMP_FEATURE_PEDOMETER);
   imu.dmpSetPedometerSteps(stepCount);
   imu.dmpSetPedometerTime(stepTime);
 }
 
-void loop() 
+void loop()
 {
   stepCount = imu.dmpGetPedometerSteps();
   stepTime = imu.dmpGetPedometerTime();
-  
+
   if (stepCount != lastStepCount)
   {
     lastStepCount = stepCount;
-    SerialPort.print("Walked " + String(stepCount) + 
+    SerialPort.print("Walked " + String(stepCount) +
                      " steps");
-    SerialPort.println(" (" + 
+    SerialPort.println(" (" +
               String((float)stepTime / 1000.0) + " s)");
   }
 }
-

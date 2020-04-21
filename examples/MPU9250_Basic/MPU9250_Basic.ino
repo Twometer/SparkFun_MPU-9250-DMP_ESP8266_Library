@@ -1,11 +1,11 @@
 /************************************************************
 MPU9250_Basic
- Basic example sketch for MPU-9250 DMP Arduino Library 
+ Basic example sketch for MPU-9250 DMP Arduino Library
 Jim Lindblom @ SparkFun Electronics
 original creation date: November 23, 2016
 https://github.com/sparkfun/SparkFun_MPU9250_DMP_Arduino_Library
 
-This example sketch demonstrates how to initialize the 
+This example sketch demonstrates how to initialize the
 MPU-9250, and stream its sensor outputs to a serial monitor.
 
 Development environment specifics:
@@ -17,11 +17,15 @@ Supported Platforms:
 *************************************************************/
 #include <SparkFunMPU9250-DMP.h>
 
-#define SerialPort SerialUSB
+#ifdef SAMD
+  #define SerialPort SerialUSB
+#else
+  #define SerialPort Serial
+#endif
 
 MPU9250_DMP imu;
 
-void setup() 
+void setup()
 {
   SerialPort.begin(115200);
 
@@ -53,7 +57,7 @@ void setup()
   imu.setGyroFSR(2000); // Set gyro to 2000 dps
   // Accel options are +/- 2, 4, 8, or 16 g
   imu.setAccelFSR(2); // Set accel to +/-2g
-  // Note: the MPU-9250's magnetometer FSR is set at 
+  // Note: the MPU-9250's magnetometer FSR is set at
   // +/- 4912 uT (micro-tesla's)
 
   // setLPF() can be used to set the digital low-pass filter
@@ -72,7 +76,7 @@ void setup()
   imu.setCompassSampleRate(10); // Set mag rate to 10Hz
 }
 
-void loop() 
+void loop()
 {
   // dataReady() checks to see if new accel/gyro data
   // is available. It will return a boolean true or false
@@ -92,7 +96,7 @@ void loop()
 }
 
 void printIMUData(void)
-{  
+{
   // After calling update() the ax, ay, az, gx, gy, gz, mx,
   // my, mz, time, and/or temerature class variables are all
   // updated. Access them by placing the object. in front:
@@ -109,7 +113,7 @@ void printIMUData(void)
   float magX = imu.calcMag(imu.mx);
   float magY = imu.calcMag(imu.my);
   float magZ = imu.calcMag(imu.mz);
-  
+
   SerialPort.println("Accel: " + String(accelX) + ", " +
               String(accelY) + ", " + String(accelZ) + " g");
   SerialPort.println("Gyro: " + String(gyroX) + ", " +
@@ -119,4 +123,3 @@ void printIMUData(void)
   SerialPort.println("Time: " + String(imu.time) + " ms");
   SerialPort.println();
 }
-
